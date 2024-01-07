@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shopping_list_enhanced/scopes/groceries_scope.dart';
 import 'package:shopping_list_enhanced/screens/groceries_screen.dart';
 
 void main() {
@@ -17,7 +18,9 @@ class ShoppingListApp extends StatelessWidget {
           seedColor: const Color.fromARGB(255, 0, 37, 102),
         ),
       ),
-      home: const GroceriesScreen(),
+      home: const GroceriesScope(
+        child: GroceriesScreen(),
+      ),
     );
   }
 }
