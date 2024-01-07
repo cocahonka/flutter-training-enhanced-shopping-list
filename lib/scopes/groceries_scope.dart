@@ -1,7 +1,8 @@
 import 'dart:collection';
 
-import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart' show listEquals;
 import 'package:flutter/widgets.dart';
+import 'package:shopping_list_enhanced/models/category.dart';
 import 'package:shopping_list_enhanced/models/grocery.dart';
 
 @immutable
@@ -41,7 +42,11 @@ class GroceriesScope extends StatefulWidget {
 }
 
 class _GroceriesScopeState extends State<GroceriesScope> {
-  List<Grocery> _groceries = [];
+  List<Grocery> _groceries = [
+    const Grocery(id: '1', name: 'Bananas', quantity: 12, category: Category.fruit),
+    const Grocery(id: '2', name: 'Apples', quantity: 10, category: Category.fruit),
+    const Grocery(id: '3', name: 'Milk', quantity: 6, category: Category.hygiene),
+  ];
 
   List<Grocery> _cloneGroceries() => _groceries.map((grocery) => grocery.clone()).toList();
 
