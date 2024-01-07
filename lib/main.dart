@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:shopping_list_enhanced/screens/groceries_screen.dart';
 
 void main() {
-  runApp(const MainApp());
+  runApp(const ShoppingListApp());
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+class ShoppingListApp extends StatelessWidget {
+  const ShoppingListApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
+    return MaterialApp(
+      theme: ThemeData.dark().copyWith(
+        colorScheme: ColorScheme.fromSeed(
+          brightness: Brightness.dark,
+          seedColor: const Color.fromARGB(255, 0, 37, 102),
         ),
       ),
+      home: const GroceriesScreen(),
     );
   }
 }
