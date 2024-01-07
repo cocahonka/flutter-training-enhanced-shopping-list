@@ -42,6 +42,13 @@ class Grocery {
         'category': category.name,
       };
 
+  Grocery clone() => Grocery(
+        id: id,
+        name: name,
+        quantity: quantity,
+        category: category,
+      );
+
   @override
   int get hashCode => Object.hash(id, name, quantity, category);
 
