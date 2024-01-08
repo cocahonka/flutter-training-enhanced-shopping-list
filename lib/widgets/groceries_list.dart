@@ -11,6 +11,14 @@ class GroceriesList extends StatefulWidget {
 }
 
 class _GroceriesListState extends State<GroceriesList> {
+  late Future<List<Grocery>> _futureGroceries;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _futureGroceries = GroceriesScope.of(context).fetchGroceries();
+  }
+
   void _deleteGrocery(Grocery grocery) {
     final scope = GroceriesScope.of(context, listen: false);
     scope.deleteGrocery(grocery);
@@ -18,25 +26,49 @@ class _GroceriesListState extends State<GroceriesList> {
 
   @override
   Widget build(BuildContext context) {
-    final groceries = GroceriesScope.of(context).groceries;
-
-    return ListView.builder(
-      itemCount: groceries.length,
-      itemBuilder: (context, index) {
-        final grocery = groceries[index];
-        return Dismissible(
-          key: ValueKey(grocery.id),
-          onDismissed: (_) => _deleteGrocery(grocery),
-          child: ListTile(
-            leading: Container(
-              width: 24,
-              height: 24,
-              color: grocery.category.color,
+    return FutureBuilder<List<Grocery>>(
+      future: _futureGroceries,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final groceries = snapshot.data!;
+          return groceries.isEmpty
+              ? Center(
+                  child: Text(
+                    'You dont have groceries yet.',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  ),
+                )
+              : ListView.builder(
+                  itemCount: groceries.length,
+                  itemBuilder: (context, index) {
+                    final grocery = groceries[index];
+                    return Dismissible(
+                      key: ValueKey(grocery.id),
+                      onDismissed: (_) => _deleteGrocery(grocery),
+                      child: ListTile(
+                        leading: Container(
+                          width: 24,
+                          height: 24,
+                          color: grocery.category.color,
+                        ),
+                        title: Text(grocery.name.capitalize()),
+                        trailing: Text(grocery.quantity.toString()),
+                      ),
+                    );
+                  },
+                );
+        } else if (snapshot.hasError) {
+          return Center(
+            child: Text(
+              snapshot.error.toString(),
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodyLarge,
             ),
-            title: Text(grocery.name.capitalize()),
-            trailing: Text(grocery.quantity.toString()),
-          ),
-        );
+          );
+        }
+
+        return const Center(child: CircularProgressIndicator());
       },
     );
   }
