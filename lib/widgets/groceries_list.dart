@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:shopping_list_enhanced/extensions/string.dart';
-import 'package:shopping_list_enhanced/models/grocery.dart';
 import 'package:shopping_list_enhanced/scopes/groceries_scope.dart';
 
 class GroceriesList extends StatefulWidget {
@@ -11,23 +10,10 @@ class GroceriesList extends StatefulWidget {
 }
 
 class _GroceriesListState extends State<GroceriesList> {
-  late Future<List<Grocery>> _futureGroceries;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _futureGroceries = GroceriesScope.of(context).fetchGroceries();
-  }
-
-  void _deleteGrocery(Grocery grocery) {
-    final scope = GroceriesScope.of(context, listen: false);
-    scope.deleteGrocery(grocery);
-  }
-
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Grocery>>(
-      future: _futureGroceries,
+    return StreamBuilder(
+      stream: GroceriesScope.of(context).groceryStream,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           final groceries = snapshot.data!;
@@ -44,8 +30,8 @@ class _GroceriesListState extends State<GroceriesList> {
                   itemBuilder: (context, index) {
                     final grocery = groceries[index];
                     return Dismissible(
-                      key: ValueKey(grocery.id),
-                      onDismissed: (_) => _deleteGrocery(grocery),
+                      key: UniqueKey(),
+                      onDismissed: (_) => GroceriesScope.of(context).deleteGrocery(grocery),
                       child: ListTile(
                         leading: Container(
                           width: 24,

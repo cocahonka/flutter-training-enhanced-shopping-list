@@ -13,7 +13,7 @@ class GroceriesScreen extends StatefulWidget {
 
 class _GroceriesScreenState extends State<GroceriesScreen> {
   Future<void> _addNewGrocery() async {
-    final addNewGrocery = GroceriesScope.of(context, listen: false).addGrocery;
+    final addGrocery = GroceriesScope.of(context, listen: false).addGrocery;
 
     final grocery = await Navigator.of(context).push<Grocery>(
       MaterialPageRoute(builder: (_) => const NewGroceryScreen()),
@@ -21,7 +21,11 @@ class _GroceriesScreenState extends State<GroceriesScreen> {
 
     if (grocery == null) return;
 
-    addNewGrocery(grocery);
+    await addGrocery(
+      name: grocery.name,
+      quantity: grocery.quantity,
+      category: grocery.category,
+    );
   }
 
   @override
